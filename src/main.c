@@ -9,14 +9,36 @@
 #define ASCII_START 33
 #define ASCII_END 127
 
+/**
+ * @file main.c
+ * @brief Create a dictionary of frequencies for all characters in file.
+ * @author КІТ-120а.
+ * @date 22-dec-2020
+ * @version 1.0
+ */
+
+/** 
+* count_symbols:
+* Сount how many characters are in the text, write it into the dictionary of entries
+* @param stream - pointer to file with text (указатель на файл с текстом)
+*/
 void count_symbols(FILE *stream);
-
+/** Function for output(Функция для вывода)
+*  @param start @param fin - from which number to display characters
+*/
 void output(int start, int fin);
-
+/** 
+* symbols_freq:
+*Function for displaying info about the frequency of occurrence of a given type of characters
+*  @param command - Command - type of checked symbols
+*/
 void symbols_freq(char command);
 
 float get_percent(int num);
-
+/**
+* most_common:
+* Returning amount of the most frequent character in text 
+*/
 int most_common(int frequency[ASCII_END], int call);
 
 int already_checked(int N);
@@ -31,36 +53,39 @@ void calculate_indents_between_indicators(int *indents_between_indicators, int i
 
 int calculate_count_of_steps_for_output_weight(int height_weight_step, float weight_of_percent, float maximal_value_for_percent);
 
-/* Таблица частот */
+/* Frequency table */
 int frequency[ASCII_END];
 
 char top_five_symbols[5] = {0, 0, 0, 0, 0};
 
-/* Общее кол-ва проверенных символов */
+/* Ammount of checked symbols */
 int text_length = 0;
 
-/* Основная функция */
+/**
+* main: 
+* function specifies the array, its size and value, and passes everything to the function findNumb.
+*/
 int main() {
-  /*Открытие файла*/
+  /*Opening file*/
   FILE *stream;
   if ((stream = fopen("test.htm", "rt"))==NULL) {
-    /* Если не открывается - выходим из программы */
+    /* If doesn't open - terminate programm */
     printf("Cannot open file.\n");
     return 1;
   }
 
-  /* Обнуление словаря вхождений*/
+  /* Resetting the dictionary of entries */
   memset(frequency, 0, ASCII_END * sizeof(unsigned));
 
-  /* Заполнение словаря вхождений*/
+  /* Feeling the dictionary of entries */
   count_symbols(stream);
 
-  /* Вывод частоты для англ. букв*/
+  /* Output for frequency of english letters */
   symbols_freq('e');
 
   printf("\n");
 
-  /* Вывод частоты для небукв. символов*/
+  /* Output for non-alphabetical symbols */
   symbols_freq('s');
 
   float percentage_of_occurrence[5] = {0, 0, 0, 0, 0};
@@ -77,7 +102,7 @@ int main() {
   return 0;
 }
 
-/* Возвращает количество самого частого символа в тексте */
+
 int most_common(int frequency[ASCII_END], int call) {
   int max = frequency[1];
   for(int i = ASCII_START; i < ASCII_END; i++) {
@@ -98,9 +123,7 @@ int already_checked(int N) {
   return 0;
 }
 
-/* Считаем сколько символов в тексте, записываем в словарь вхождений
-  @param stream указатель на файл с текстом
-*/
+
 void count_symbols(FILE *stream) {
   while (!feof(stream)) {
     char tmp = fgetc(stream);
@@ -111,9 +134,7 @@ void count_symbols(FILE *stream) {
   }
 }
 
-/* Функция для вывода в консоль
-  @param start @param fin - с какого по какое число выводить символы
-*/
+
 void output(int start, int fin) {
   for (int i = start; i < fin; i++) {
     if (frequency[i]) {
@@ -131,18 +152,16 @@ float get_percent(int num) {
 }
 
 
-/* Функция для вывода инфы о частоте встречи заданого типа символов
-  @param command - команда - тип проверяемых символов
-*/
+
 void symbols_freq(char command) {
-  if (command == 'e') { //англ буквы
+  if (command == 'e') { //english letters
     output('a', 'z'+1);
-  } else if (command == 's') { //небукв. символы
+  } else if (command == 's') { //non-letter characters
     output(ASCII_START, 'a');
     output('z'+1, ASCII_END);
-  } else if ( command == 'r') { //русские буквы
+  } else if ( command == 'r') { //russian letters
     printf("Russian language is not avaliable");
-  } else { //неправильная комманда
+  } else { //invalid command
     printf("Invalid input");
   }
 }
